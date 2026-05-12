@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pitamaha-5 Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#010409;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#e6edf3;padding:1rem;min-height:100vh;-webkit-text-size-adjust:100%;}
+.wrap{max-width:980px;margin:0 auto;}
+.mc{background:#161b22;border:0.5px solid #30363d;border-radius:8px;padding:.85rem;}
+.ml{font-size:11px;color:#8b949e;margin:0 0 4px;}
+.mv{font-size:15px;font-weight:700;margin:0;color:#e6edf3;}
+.ms{font-size:10px;color:#6e7681;margin:2px 0 0;}
+.card{background:#161b22;border:0.5px solid #30363d;border-radius:10px;padding:1rem 1.1rem;}
+.pb{height:4px;background:#21262d;border-radius:2px;overflow:hidden;margin:4px 0;}
+.pf{height:100%;border-radius:2px;}
+.trow{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:0.5px solid #21262d;cursor:pointer;-webkit-user-select:none;user-select:none;touch-action:manipulation;}
+.trow:active{background:#1c2128;border-radius:4px;}
+.chk{width:17px;height:17px;min-width:17px;border-radius:50%;border:1.5px solid #484f58;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.chk.ok{background:#238636;border-color:#238636;}
+.bdg{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;white-space:nowrap;}
+.bpr{background:#1f3a5f;color:#79c0ff;}
+.bgr{background:#21262d;color:#8b949e;}
+.bgn{background:#1a3a26;color:#56d364;}
+.bam{background:#3d2a00;color:#e3b341;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.grid-top{display:grid;grid-template-columns:200px 1fr;gap:12px;align-items:start;}
+.grid-pay{display:grid;grid-template-columns:210px 1fr;gap:10px;align-items:start;}
+.grid-cc{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.col-left{display:flex;flex-direction:column;gap:10px;}
+@media(max-width:680px){
+  .grid4{grid-template-columns:1fr 1fr;}
+  .grid-top{grid-template-columns:1fr;}
+  .grid-pay{grid-template-columns:1fr;}
+  .grid-cc{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem;padding-bottom:.9rem;border-bottom:0.5px solid #30363d;gap:8px;">
+  <div>
+    <p style="font-size:10px;color:#8b949e;margin-bottom:2px;">A.I.M.S Architectural Builder · Mr. & Mrs. Choi · KBP</p>
+    <p style="font-size:20px;font-weight:700;line-height:1.2;">Pitamaha-5 — Dashboard Proyek</p>
+    <p style="font-size:11px;color:#8b949e;margin-top:3px;">Renovasi & Penambahan Masa Bangunan · Jl. Pitamaha No.5</p>
+  </div>
+  <div style="text-align:right;font-size:10px;color:#6e7681;flex-shrink:0;">
+    <p>Terbarukan</p>
+    <p style="font-weight:700;color:#e6edf3;" id="upd"></p>
+  </div>
+</div>
+
+<div class="grid4" style="margin-bottom:1.1rem;">
+  <div class="mc"><p class="ml">Total RAB</p><p class="mv" id="m-rab">--</p><p class="ms" id="m-rab-sub">--</p></div>
+  <div class="mc"><p class="ml">Total dikontrak</p><p class="mv" id="m-kontrak" style="color:#56d364;">--</p><p class="ms" id="m-kontrak-sub">--</p></div>
+  <div class="mc"><p class="ml">Sudah dibayar</p><p class="mv" id="mpaid" style="color:#79c0ff;">--</p><p class="ms" id="mppct">--</p></div>
+  <div class="mc"><p class="ml">Belum dikontrak</p><p class="mv" id="m-belum" style="color:#e3b341;">--</p><p class="ms" id="m-belum-sub">--</p></div>
+</div>
+
+<div class="grid-top" style="margin-bottom:1.1rem;">
+  <div class="card">
+    <p style="font-size:11px;color:#8b949e;margin-bottom:8px;">Alokasi budget RAB</p>
+    <div style="position:relative;width:100%;height:150px;"><canvas id="dc" width="200" height="150"></canvas></div>
+    <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;" id="legend"></div>
+  </div>
+  <div class="card">
+    <p style="font-size:13px;font-weight:700;margin-bottom:14px;">Progress pekerjaan & pembayaran per kontrak</p>
+    <div id="psec"></div>
+  </div>
+</div>
+
+<p style="font-size:13px;font-weight:700;margin-bottom:10px;">
+  Detail termin pembayaran
+  <span style="font-weight:400;font-size:11px;color:#6e7681;">— klik untuk toggle lunas / pending</span>
+</p>
+
+<div class="grid-pay" style="margin-bottom:1.5rem;">
+  <div class="col-left">
+    <div class="card" style="border-color:#388bfd44;background:#0b1628;">
+      <p style="font-size:11px;color:#79c0ff;font-weight:700;letter-spacing:.5px;margin-bottom:12px;">RINGKASAN PEMBAYARAN</p>
+      <div id="sum-list"></div>
+      <div style="border-top:0.5px solid #21262d;margin-top:10px;padding-top:10px;">
+        <p style="font-size:10px;color:#6e7681;margin-bottom:4px;">Total terbayar</p>
+        <p style="font-size:20px;font-weight:700;color:#79c0ff;" id="sum-total">Rp 0</p>
+        <div class="pb" style="margin-top:8px;height:5px;"><div class="pf" id="sum-bar" style="width:0%;background:linear-gradient(90deg,#388bfd,#56d364);"></div></div>
+        <p style="font-size:10px;color:#6e7681;margin-top:4px;" id="sum-pct">0%</p>
+      </div>
+      <div style="border-top:0.5px solid #21262d;margin-top:10px;padding-top:10px;">
+        <p style="font-size:10px;color:#6e7681;margin-bottom:4px;">Sisa kewajiban kontrak</p>
+        <p style="font-size:16px;font-weight:700;color:#e3b341;" id="sum-rem">--</p>
+      </div>
+    </div>
+    <div class="card" style="border-color:#23863644;background:#060f09;" id="pending-card">
+      <p style="font-size:11px;color:#484f58;text-align:center;padding:12px 0;">Memuat...</p>
+    </div>
+  </div>
+  <div class="grid-cc" id="ccards"></div>
+</div>
+
+<p style="font-size:13px;font-weight:700;margin-bottom:10px;">Rencana Anggaran Biaya (RAB) lengkap</p>
+<div class="card" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+  <div style="min-width:360px;">
+    <div style="display:grid;grid-template-columns:22px 1fr 110px 80px;gap:6px;padding:0 0 8px;border-bottom:0.5px solid #30363d;">
+      <span style="font-size:10px;color:#6e7681;">#</span>
+      <span style="font-size:10px;color:#8b949e;">Pekerjaan</span>
+      <span style="font-size:10px;color:#8b949e;text-align:right;">Nilai RAB</span>
+      <span style="font-size:10px;color:#8b949e;text-align:center;">Kontrak</span>
+    </div>
+    <div id="rabl"></div>
+  </div>
+</div>
+
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+var IDR = function(n){ return 'Rp ' + n.toLocaleString('id-ID'); };
+var IDRm = function(n){
+  if(n >= 1000000000) return 'Rp ' + (n/1000000000).toFixed(2).replace('.',',') + ' M';
+  if(n >= 1000000)    return 'Rp ' + (n/1000000).toLocaleString('id-ID') + ' jt';
+  return IDR(n);
+};
+var paidOf = function(c){ return c.terms.filter(function(t){return t.paid;}).reduce(function(s,t){return s+t.a;},0); };
+
+var COL = {prc:'#388bfd', spk01:'#238636', spk02:'#e3b341', spk03:'#d29922'};
+var LBL = {prc:'Perencanaan', spk01:'SPK 01', spk02:'SPK 02', spk03:'SPK 03'};
+var BDG = {prc:'bpr', spk01:'bgn', spk02:'bam', spk03:'bam'};
+
+var S = {
+  contracts: [
+    {
+      id:'prc', name:'Perencanaan', short:'Perencanaan',
+      date:'19 Jan 2026', total:50000000, col:COL.prc, prog:85,
+      terms:[
+        {l:'Termin 1 — DP 50%',           a:25000000, paid:true,  tgl:'22 Jan 2026', ref:'26012202294668'},
+        {l:'Termin 2 — Gambar Kerja 50%', a:25000000, paid:false, tgl:null,          ref:null}
+      ]
+    },
+    {
+      id:'spk01', name:'SPK 01 — Bongkaran & Struktur', short:'SPK 01',
+      date:'12 Mar 2026', total:228000000, col:COL.spk01, prog:100,
+      terms:[
+        {l:'Termin I — DP 40%',                    a:91200000, paid:true, tgl:'12 Mar 2026', ref:'26031200074523'},
+        {l:'Termin II — Strauss Pile selesai 40%', a:91200000, paid:true, tgl:'20 Apr 2026', ref:'26041800431896'},
+        {l:'Termin III — Pengecoran lantai 20%',   a:45600000, paid:true, tgl:'7 Mei 2026',  ref:'26050700345361'}
+      ]
+    },
+    {
+      id:'spk02', name:'SPK 02 — Penambahan Masa + Kanopi + Fasad', short:'SPK 02',
+      date:'22 Apr 2026', total:299325000, col:COL.spk02, prog:15,
+      terms:[
+        {l:'Termin I — DP 40%',                                            a:119730000, paid:true,  tgl:'7 Mei 2026', ref:'26050700345361'},
+        {l:'Termin II — Plafond, Atap Kanopi & finishing tampak muka 40%', a:119730000, paid:false, tgl:null,         ref:null},
+        {l:'Termin III — Penambahan Bangunan belakang selesai 20%',        a:59865000,  paid:false, tgl:null,         ref:null}
+      ]
+    },
+    {
+      id:'spk03', name:'SPK 03 — Tangga Service, KM, Granit/SPC & Atap', short:'SPK 03',
+      date:'6 Mei 2026', total:314600000, col:COL.spk03, prog:0,
+      terms:[
+        {l:'Termin I-A — DP Stock Bahan (60% bagian 1)',                          a:100000000, paid:true,  tgl:'7 Mei 2026',    ref:'26050700345361'},
+        {l:'Termin I-B — DP Stock Bahan (60% bagian 2)',                          a:88760000,  paid:false, tgl:'Awal Jun 2026', ref:null},
+        {l:'Termin II — Atap, Plafon, KM lt2, SPC lt2, Persiapan Granit lt1 (30%)', a:94380000, paid:false, tgl:null,          ref:null},
+        {l:'Termin III — Pelunasan 10%',                                          a:31460000,  paid:false, tgl:null,            ref:null}
+      ]
+    }
+  ],
+  rab:[
+    {n:1,  name:'Biaya Perencanaan',                           a:50000000,  spk:'prc'},
+    {n:2,  name:'Pembongkaran Bangunan',                        a:36000000,  spk:'spk01'},
+    {n:3,  name:'Penambahan Massa Bangunan',                    a:220500000, spk:'spk02'},
+    {n:4,  name:'Renovasi Pengecatan',                          a:65650000,  spk:null},
+    {n:5,  name:'Renovasi Tangga Service',                      a:30000000,  spk:'spk03'},
+    {n:6,  name:'Renovasi Kamar Mandi',                         a:110000000, spk:'spk03'},
+    {n:7,  name:'Renovasi Electrical',                          a:45000000,  spk:null},
+    {n:8,  name:'Renovasi Aluminium Pintu & Jendela',           a:120000000, spk:null},
+    {n:9,  name:'Renovasi Pintu',                               a:50000000,  spk:null},
+    {n:10, name:'Renovasi Ganti Granite Lantai 1',              a:72000000,  spk:'spk03'},
+    {n:11, name:'Renovasi Kanopi Depan',                        a:32500000,  spk:'spk02'},
+    {n:12, name:'Renovasi Perbaikan Tembok Taman',              a:35750000,  spk:null},
+    {n:13, name:'Tambahan Struktur Utama (Strauss Pile)',       a:150000000, spk:'spk01'},
+    {n:14, name:'Tambahan Struktur Lantai (Wire Mesh & K225)',  a:42000000,  spk:'spk01'},
+    {n:15, name:'Tambahan Volume Penggantian Lantai / SPC Lt2', a:78000000,  spk:'spk03'},
+    {n:16, name:'Tambahan Budget Renovasi Kamar Mandi',         a:42000000,  spk:'spk03'},
+    {n:17, name:'Renovasi Plafond Atap & Fasad',                a:46325000,  spk:'spk02'},
+    {n:18, name:'RAB Taman Depan',                              a:56825000,  spk:null},
+    {n:19, name:'RAB Taman Belakang',                           a:66600000,  spk:null},
+    {n:20, name:'RAB Lapangan Bola',                            a:140000000, spk:null},
+    {n:21, name:'RAB Penggantian Atap Kamar Mr.',               a:9600000,   spk:'spk03'},
+    {n:22, name:'RAB Tambahan Roster Taman Depan',              a:3120000,   spk:null}
+  ]
+};
+
+var TOTAL_RAB     = S.rab.reduce(function(s,r){return s+r.a;},0);
+var TOTAL_KONTRAK = S.contracts.reduce(function(s,c){return s+c.total;},0);
+var totalPaidNow  = function(){return S.contracts.reduce(function(s,c){return s+paidOf(c);},0);};
+
+function updMetrics(){
+  var paid=totalPaidNow(), pp=Math.round(paid/TOTAL_KONTRAK*100);
+  var uncon=TOTAL_RAB-TOTAL_KONTRAK, uItems=S.rab.filter(function(r){return !r.spk;}).length;
+  document.getElementById('m-rab').textContent         = IDRm(TOTAL_RAB);
+  document.getElementById('m-rab-sub').textContent     = S.rab.length+' item pekerjaan';
+  document.getElementById('m-kontrak').textContent     = IDRm(TOTAL_KONTRAK);
+  document.getElementById('m-kontrak-sub').textContent = Math.round(TOTAL_KONTRAK/TOTAL_RAB*100)+'% dari RAB · '+S.contracts.length+' kontrak';
+  document.getElementById('m-belum').textContent       = IDRm(uncon);
+  document.getElementById('m-belum-sub').textContent   = uItems+' item · SPK belum diterbitkan';
+  document.getElementById('mpaid').textContent         = IDRm(paid);
+  document.getElementById('mppct').textContent         = pp+'% dari total kontrak';
+  document.getElementById('sum-list').innerHTML = S.contracts.map(function(c){
+    var p=paidOf(c),pct=Math.round(p/c.total*100);
+    return '<div style="padding:7px 0;border-bottom:0.5px solid #21262d;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">'+
+      '<span style="font-size:11px;color:#c9d1d9;">'+c.short+'</span>'+
+      '<span style="font-size:12px;font-weight:700;color:'+c.col+';">'+IDR(p)+'</span></div>'+
+      '<div style="display:flex;align-items:center;gap:6px;">'+
+      '<div class="pb" style="flex:1;margin:0;height:3px;"><div class="pf" style="width:'+pct+'%;background:'+c.col+';height:3px;"></div></div>'+
+      '<span style="font-size:10px;color:#6e7681;min-width:28px;text-align:right;">'+pct+'%</span></div></div>';
+  }).join('');
+  document.getElementById('sum-total').textContent = IDR(paid);
+  document.getElementById('sum-bar').style.width   = pp+'%';
+  document.getElementById('sum-pct').textContent   = pp+'% dari total kontrak ('+IDR(TOTAL_KONTRAK)+')';
+  document.getElementById('sum-rem').textContent   = IDR(TOTAL_KONTRAK-paid);
+}
+
+function renderPsec(){
+  document.getElementById('psec').innerHTML = S.contracts.map(function(c){
+    var pp=Math.round(paidOf(c)/c.total*100);
+    return '<div style="margin-bottom:14px;">'+
+      '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;margin-bottom:5px;">'+
+      '<span style="font-size:12px;font-weight:600;">'+c.short+'</span>'+
+      '<span style="font-size:10px;color:#8b949e;">'+IDR(c.total)+' · '+c.date+'</span></div>'+
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">'+
+      '<span style="font-size:10px;color:#6e7681;width:70px;flex-shrink:0;">Progress fisik</span>'+
+      '<div class="pb" style="flex:1;margin:0;"><div class="pf" style="width:'+c.prog+'%;background:'+c.col+';"></div></div>'+
+      '<span style="font-size:10px;width:28px;text-align:right;">'+c.prog+'%</span>'+
+      '<button onclick="editProg(\''+c.id+'\')" style="font-size:10px;padding:3px 8px;border-radius:4px;border:0.5px solid #30363d;background:none;color:#8b949e;cursor:pointer;touch-action:manipulation;">ubah</button>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:8px;">'+
+      '<span style="font-size:10px;color:#6e7681;width:70px;flex-shrink:0;">Bayar termin</span>'+
+      '<div class="pb" style="flex:1;margin:0;"><div class="pf" style="width:'+pp+'%;background:#238636;"></div></div>'+
+      '<span style="font-size:10px;width:28px;text-align:right;">'+pp+'%</span>'+
+      '<span style="font-size:10px;color:#8b949e;width:60px;text-align:right;">'+IDRm(paidOf(c))+'</span>'+
+      '</div></div>';
+  }).join('');
+}
+
+function renderCards(){
+  document.getElementById('ccards').innerHTML = S.contracts.map(function(c){
+    var pp=Math.round(paidOf(c)/c.total*100);
+    var terms=c.terms.map(function(t,i){
+      var locked=(t.paid && t.ref);
+      var isPlanned=(!t.paid && t.tgl);
+      var lockIcon=locked?'<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#484f58" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>':'';
+      var badge=t.paid?'bgn':isPlanned?'bam':'bgr';
+      var label=t.paid?'Lunas':isPlanned?'Rencana':'Pending';
+      return '<div class="trow" onclick="tog(\''+c.id+'\','+i+')" style="'+(locked?'cursor:default;':'')+'">'+
+        '<div class="chk'+(t.paid?' ok':'')+'" style="'+(locked?'opacity:.6;':'')+'">'+
+        (t.paid?'<svg width="9" height="9" viewBox="0 0 8 8"><polyline points="1.5,4 3,5.5 6.5,2" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>':'')+
+        '</div>'+
+        '<div style="flex:1;min-width:0;">'+
+        '<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">'+
+        '<p style="margin:0;font-size:11px;line-height:1.4;color:'+(t.paid?'#6e7681':'#e6edf3')+';'+(t.paid?'text-decoration:line-through;':'')+'">'+t.l+'</p>'+lockIcon+
+        '</div>'+
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:3px;">'+
+        '<span style="font-size:10px;color:#6e7681;">'+IDR(t.a)+'</span>'+
+        (t.tgl && t.paid  ? '<span style="font-size:10px;color:#56d364;">· '+t.tgl+'</span>' : '')+
+        (t.tgl && !t.paid ? '<span style="font-size:10px;color:#e3b341;">· Rencana: '+t.tgl+'</span>' : '')+
+        (t.ref            ? '<span style="font-size:9px;color:#484f58;">ref: '+t.ref+'</span>' : '')+
+        '</div></div>'+
+        '<span class="bdg '+badge+'">'+label+'</span>'+
+        '</div>';
+    }).join('');
+    return '<div class="card">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;">'+
+      '<div style="flex:1;min-width:0;"><p style="margin:0;font-size:12px;font-weight:700;line-height:1.4;">'+c.name+'</p>'+
+      '<p style="margin:2px 0 0;font-size:10px;color:#8b949e;">Kontrak: '+c.date+'</p></div>'+
+      '<span class="bdg '+BDG[c.id]+'" style="flex-shrink:0;">'+IDRm(c.total)+'</span></div>'+
+      '<div style="margin:6px 0 4px;">'+
+      '<div style="display:flex;justify-content:space-between;font-size:10px;color:#6e7681;margin-bottom:3px;">'+
+      '<span>Pembayaran termin</span><span>'+IDRm(paidOf(c))+' / '+IDRm(c.total)+'</span></div>'+
+      '<div class="pb"><div class="pf" style="width:'+pp+'%;background:#238636;"></div></div>'+
+      '</div>'+terms+'</div>';
+  }).join('');
+}
+
+function renderPendingCard(){
+  var checked=[];
+  S.contracts.forEach(function(c){
+    c.terms.forEach(function(t){
+      if(t.paid && !t.ref) checked.push({cname:c.short,label:t.l,a:t.a,col:c.col});
+    });
+  });
+  var total=checked.reduce(function(s,p){return s+p.a;},0);
+  var rows=checked.map(function(p){
+    return '<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:0.5px solid #21262d;gap:8px;">'+
+      '<div style="flex:1;min-width:0;"><p style="margin:0;font-size:11px;color:#e6edf3;line-height:1.4;">'+p.label+'</p>'+
+      '<span class="bdg" style="margin-top:3px;display:inline-block;background:'+p.col+'22;color:'+p.col+';">'+p.cname+'</span></div>'+
+      '<span style="font-size:11px;font-weight:700;white-space:nowrap;color:#c9d1d9;">'+IDR(p.a)+'</span></div>';
+  }).join('');
+  document.getElementById('pending-card').innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'+
+    '<p style="font-size:11px;color:#56d364;font-weight:700;letter-spacing:.5px;">AKAN DIBAYAR</p>'+
+    '<span style="font-size:10px;background:#1a3a26;color:#56d364;padding:2px 8px;border-radius:10px;font-weight:700;">'+checked.length+' termin</span></div>'+
+    (checked.length===0
+      ?'<div style="text-align:center;padding:16px 0;"><p style="font-size:11px;color:#484f58;">Belum ada termin dipilih</p><p style="font-size:10px;color:#3a3f47;margin-top:4px;">Centang termin untuk menghitung total</p></div>'
+      :rows)+
+    '<div style="margin-top:10px;padding-top:10px;border-top:0.5px solid #21262d;">'+
+    '<p style="font-size:10px;color:#6e7681;margin-bottom:4px;">Total yang akan dibayar</p>'+
+    '<p style="font-size:'+(total>0?'20':'15')+'px;font-weight:700;color:'+(total>0?'#56d364':'#3a3f47')+';">'+(total>0?IDR(total):'Rp 0')+'</p>'+
+    (total>0?'<div class="pb" style="margin-top:8px;height:4px;"><div class="pf" style="width:'+Math.round(total/TOTAL_KONTRAK*100)+'%;background:#238636;"></div></div><p style="font-size:10px;color:#6e7681;margin-top:3px;">'+Math.round(total/TOTAL_KONTRAK*100)+'% dari total kontrak</p>':'')+
+    '</div>';
+}
+
+function renderRab(){
+  var total=S.rab.reduce(function(s,r){return s+r.a;},0);
+  document.getElementById('rabl').innerHTML=S.rab.map(function(r){
+    return '<div style="display:grid;grid-template-columns:22px 1fr 110px 80px;gap:6px;align-items:center;padding:7px 0;border-bottom:0.5px solid #21262d;">'+
+      '<span style="font-size:10px;color:#484f58;">'+r.n+'</span>'+
+      '<span style="font-size:12px;line-height:1.4;">'+r.name+'</span>'+
+      '<span style="font-size:11px;color:#8b949e;text-align:right;white-space:nowrap;">'+IDR(r.a)+'</span>'+
+      '<span style="text-align:center;">'+(r.spk
+        ?'<span class="bdg" style="background:'+COL[r.spk]+'22;color:'+COL[r.spk]+';">'+LBL[r.spk]+'</span>'
+        :'<span style="color:#484f58;font-size:11px;">--</span>')+'</span></div>';
+  }).join('')+
+  '<div style="display:grid;grid-template-columns:22px 1fr 110px 80px;gap:6px;padding:10px 0 2px;border-top:0.5px solid #30363d;">'+
+  '<span></span><span style="font-size:12px;font-weight:700;">Total RAB</span>'+
+  '<span style="font-size:12px;font-weight:700;text-align:right;">'+IDR(total)+'</span><span></span></div>';
+}
+
+function renderLegend(){
+  var belum=TOTAL_RAB-TOTAL_KONTRAK;
+  var entries=S.contracts.map(function(c){return{label:c.short+' — '+IDRm(c.total),col:c.col};});
+  entries.push({label:'Belum dikontrak — '+IDRm(belum),col:'#30363d'});
+  document.getElementById('legend').innerHTML=entries.map(function(e){
+    return '<div style="display:flex;align-items:center;gap:6px;font-size:10px;color:#8b949e;">'+
+      '<span style="width:8px;height:8px;min-width:8px;border-radius:2px;background:'+e.col+';"></span>'+e.label+'</div>';
+  }).join('');
+}
+
+window.tog = function(cid,ti){
+  var c=S.contracts.find(function(x){return x.id===cid;});
+  var t=c.terms[ti];
+  if(t.paid && t.ref) return;
+  t.paid=!t.paid;
+  renderCards(); renderPsec(); updMetrics(); renderPendingCard();
+};
+window.editProg = function(cid){
+  var c=S.contracts.find(function(x){return x.id===cid;});
+  var v=prompt('Progress fisik '+c.short+' (0–100):',c.prog);
+  if(v!==null && !isNaN(parseInt(v,10))){
+    c.prog=Math.min(100,Math.max(0,parseInt(v,10)));
+    renderPsec();
+  }
+};
+
+document.getElementById('upd').textContent = new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+renderCards(); renderPsec(); renderRab(); renderLegend(); updMetrics(); renderPendingCard();
+
+var s=document.createElement('script');
+s.src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js';
+s.onload=function(){
+  var belum=TOTAL_RAB-TOTAL_KONTRAK;
+  new Chart(document.getElementById('dc').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:S.contracts.map(function(c){return c.short;}).concat(['Belum Dikontrak']),
+      datasets:[{
+        data:S.contracts.map(function(c){return c.total;}).concat([belum]),
+        backgroundColor:S.contracts.map(function(c){return c.col;}).concat(['#30363d']),
+        borderWidth:3, borderColor:'#161b22'
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(ctx){return ' '+IDR(ctx.raw);}}}}}
+  });
+};
+document.head.appendChild(s);
+
+});
+</script>
+</body>
+</html>
