@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitamaha 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; }
+.bg {
+  position: fixed; inset: 0;
+  background-image: url('pitamaha5-bg.png');
+  background-size: cover;
+  background-position: center top;
+  z-index: 0;
+}
+.bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(105deg, rgba(4,6,10,0.82) 0%, rgba(4,6,10,0.55) 45%, rgba(4,6,10,0.18) 100%),
+    linear-gradient(to top, rgba(4,6,10,0.78) 0%, transparent 40%);
+}
+.page { position: relative; z-index: 1; height: 100vh; display: flex; flex-direction: column; padding: 36px 52px 0; }
+.topbar { display: flex; align-items: center; justify-content: space-between; }
+.brand { font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.32); font-weight: 500; }
+.nav-top { display: flex; gap: 40px; list-style: none; }
+.nav-top a { text-decoration: none; font-size: 13px; font-weight: 400; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); transition: color 0.2s; }
+.nav-top a:hover { color: #fff; }
+.hero { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+.eyebrow { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(210,175,100,0.75); margin-bottom: 14px; font-weight: 400; }
+.title-wrap { margin-bottom: 18px; }
+.title-main { font-family: Arial, sans-serif; font-size: clamp(72px, 10vw, 128px); font-weight: 700; color: #fff; line-height: 0.88; letter-spacing: -0.02em; }
+.title-num { color: rgba(210,175,100,0.85); display: block; line-height: 0.9; }
+.location { font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.45); letter-spacing: 0.07em; margin-bottom: 28px; display: flex; align-items: center; gap: 7px; }
+.location-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(210,175,100,0.6); flex-shrink: 0; }
+.status-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 14px 5px 9px; border-radius: 24px; border: 0.5px solid rgba(255,255,255,0.14); backdrop-filter: blur(16px); background: rgba(255,255,255,0.07); font-size: 11px; letter-spacing: 0.09em; color: rgba(255,255,255,0.65); margin-bottom: 26px; width: fit-content; }
+.s-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: blink 2.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+.progress-row { display: flex; align-items: center; gap: 22px; margin-bottom: 48px; }
+.pct-big { font-family: Arial, sans-serif; font-size: 52px; font-weight: 700; color: #fff; line-height: 1; }
+.pct-side { display: flex; flex-direction: column; gap: 7px; }
+.pct-label { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.pct-track { width: 180px; height: 2px; background: rgba(255,255,255,0.12); border-radius: 1px; position: relative; }
+.pct-fill { position: absolute; left:0; top:0; bottom:0; background: rgba(210,175,100,0.75); border-radius: 1px; }
+.nav-bottom { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 0.5px solid rgba(255,255,255,0.1); }
+.nav-item { text-decoration: none; padding: 22px 0 28px; position: relative; padding-right: 20px; }
+.nav-item:not(:last-child)::after { content:''; position:absolute; top:22px; bottom:28px; right:0; width:0.5px; background:rgba(255,255,255,0.08); }
+.nav-item::before { content:''; position:absolute; top:0; left:0; right:20px; height:1.5px; background:rgba(210,175,100,0.7); transform:scaleX(0); transform-origin:left; transition:transform 0.3s ease; }
+.nav-item:hover::before { transform:scaleX(1); }
+.nav-item:last-child::before { right:0; }
+.nav-num { font-size: 10px; letter-spacing: 0.18em; color: rgba(210,175,100,0.6); margin-bottom: 7px; font-weight: 500; }
+.nav-title { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.78); margin-bottom: 3px; transition: color 0.2s; }
+.nav-item:hover .nav-title { color: #fff; }
+.nav-desc { font-size: 11px; color: rgba(255,255,255,0.28); font-weight: 300; }
+.nav-item:not(:first-child) { padding-left: 28px; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+.f1{animation:fadeUp .6s .05s both;} .f2{animation:fadeUp .7s .2s both;} .f3{animation:fadeUp .7s .35s both;} .f4{animation:fadeUp .6s .5s both;} .f5{animation:fadeUp .6s .65s both;} .f6{animation:fadeUp .6s .8s both;}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="page">
+  <div class="topbar f1">
+    <span class="brand">AIMS · Pitamaha 5</span>
+    <ul class="nav-top">
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="foto.html">Foto</a></li>
+      <li><a href="pembahasan.html">Pembahasan</a></li>
+    </ul>
+  </div>
+  <div class="hero">
+    <p class="eyebrow f2">Project Report · 2026</p>
+    <div class="title-wrap f3">
+      <div class="title-main">Pitamaha</div>
+      <div class="title-main title-num">5</div>
+    </div>
+    <p class="location f4">
+      <span class="location-dot"></span>
+      KBP - Pitaloka
+    </p>
+    <div class="status-pill f4">
+      <span class="s-dot"></span>
+      Dalam Pengerjaan
+    </div>
+    <div class="progress-row f5">
+      <span class="pct-big">30%</span>
+      <div class="pct-side">
+        <span class="pct-label">Progress Keseluruhan</span>
+        <div class="pct-track">
+          <div class="pct-fill" style="width:30%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-bottom f6">
+      <a class="nav-item" href="dashboard.html">
+        <div class="nav-num">01</div>
+        <div class="nav-title">Dashboard</div>
+        <div class="nav-desc">Laporan keuangan &amp; progres</div>
+      </a>
+      <a class="nav-item" href="foto.html">
+        <div class="nav-num">02</div>
+        <div class="nav-title">Foto Proyek</div>
+        <div class="nav-desc">Dokumentasi lapangan</div>
+      </a>
+      <a class="nav-item" href="pembahasan.html">
+        <div class="nav-num">03</div>
+        <div class="nav-title">Pembahasan</div>
+        <div class="nav-desc">Catatan &amp; item keputusan</div>
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
