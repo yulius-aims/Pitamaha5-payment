@@ -421,21 +421,12 @@ const CLOUD_NAME = 'drzht9qq1';
 // Public ID contoh: 'pitamaha5/foto-lantai-1'
 // ═══════════════════════════════════════════════
 const photos = [
-  { id: "20251222-survei-12_uguay3", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 12", wide: false },
-  { id: "20251222-survei-11_vllyhu", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 11", wide: false },
-  { id: "20251222-survei-07_ri432g", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 07", wide: false },
-  { id: "20251222-survei-13_j1cpxr", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 13", wide: false },
-  { id: "20251222-survei-14_ieoeme", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 14", wide: false },
-  { id: "20251222-survei-02_e1yjpj", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 02", wide: false },
-  { id: "20251222-survei-09_mx23l6", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 09", wide: false },
-  { id: "20251222-survei-10_y9ywax", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 10", wide: false },
-  { id: "20251222-survei-05_hmbyvi", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 05", wide: false },
-  { id: "20251222-survei-06_gnkynx", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 06", wide: false },
-  { id: "20251222-survei-03_krknpm", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 03", wide: false },
-  { id: "20251222-survei-04_egndlp", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 04", wide: false },
-  { id: "20251222-survei-01_vakmu5", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 01", wide: false },
-  { id: "20251222-survei-08_lq7unn", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 08", wide: false },
+  // CONTOH — hapus dan ganti dengan foto asli:
+  // { id: 'pitamaha5/foto-awal-01', date: '1 Juni 2026', caption: 'Kondisi awal struktur lantai 1', wide: false },
+  // { id: 'pitamaha5/pengecoran-kolom', date: '1 Juni 2026', caption: 'Pengecoran kolom area barat', wide: true },
+  // { id: 'pitamaha5/dinding-panel', date: '8 Juni 2026', caption: 'Progress dinding panel', wide: false },
 ];
+
 // ═══════════════════════════════════════════════
 // DAFTAR VIDEO — tambahkan di sini
 // Format: { id: 'YOUTUBE_VIDEO_ID', date: 'DD Mon YYYY', caption: 'Keterangan' }
@@ -479,12 +470,58 @@ function driveUrl(id) {
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${id}`;
 }
 
+const PHOTOS_PER_PAGE = 50;
 let currentIndex = 0;
 let filteredPhotos = [];
+let displayedCount = 0;
 let activeFilter = 'semua';
+
+function renderPhotos(data, startIdx, endIdx) {
+  const container = document.getElementById('galleryContainer');
+
+  // Kelompokkan slice yang akan dirender
+  const slice = data.slice(startIdx, endIdx);
+  const grouped = {};
+  slice.forEach(p => {
+    if (!grouped[p.date]) grouped[p.date] = [];
+    grouped[p.date].push(p);
+  });
+
+  // Cek apakah section tanggal sudah ada (untuk append)
+  Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+    let section = container.querySelector(`[data-date="${date}"]`);
+    if (!section) {
+      section = document.createElement('div');
+      section.setAttribute('data-date', date);
+      section.innerHTML = `<div class="section-date">${date}</div>`;
+      const grid = document.createElement('div');
+      grid.className = 'photo-grid';
+      grid.setAttribute('data-grid', date);
+      section.appendChild(grid);
+      // Insert before load-more button if exists
+      const loadMoreEl = document.getElementById('loadMoreWrap');
+      if (loadMoreEl) container.insertBefore(section, loadMoreEl);
+      else container.appendChild(section);
+    }
+    const grid = section.querySelector(`[data-grid="${date}"]`);
+    grouped[date].forEach(p => {
+      const card = document.createElement('div');
+      card.className = `photo-card${p.wide ? ' wide' : ''}`;
+      card.innerHTML = `
+        <img src="${driveUrl(p.id)}" alt="${p.caption}" loading="lazy"
+             onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=placeholder-icon>⚠️</div><div class=placeholder-text>Foto tidak ditemukan</div></div>'">
+        <div class="photo-overlay">
+          <span class="photo-caption">${p.caption}</span>
+        </div>`;
+      card.onclick = () => openLightbox(p.globalIdx);
+      grid.appendChild(card);
+    });
+  });
+}
 
 function buildGallery(data) {
   filteredPhotos = data;
+  displayedCount = 0;
   const container = document.getElementById('galleryContainer');
   container.innerHTML = '';
 
@@ -499,42 +536,56 @@ function buildGallery(data) {
     return;
   }
 
-  // Kelompokkan per tanggal
-  const grouped = {};
-  data.forEach((p, globalIdx) => {
-    if (!grouped[p.date]) grouped[p.date] = [];
-    grouped[p.date].push({ ...p, globalIdx });
-  });
+  // Tambahkan load-more wrapper dulu
+  const loadMoreWrap = document.createElement('div');
+  loadMoreWrap.id = 'loadMoreWrap';
+  loadMoreWrap.style.cssText = 'padding: 36px 0; text-align: center; display: none;';
+  loadMoreWrap.innerHTML = `
+    <button id="loadMoreBtn" onclick="loadMore()" style="
+      padding: 12px 36px; border-radius: 24px;
+      border: 0.5px solid rgba(210,175,100,0.5);
+      background: rgba(210,175,100,0.08);
+      font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500;
+      letter-spacing: 0.08em; color: rgba(210,175,100,0.85);
+      cursor: pointer; transition: all 0.2s;">
+      Tampilkan lebih banyak
+    </button>
+    <p id="loadMoreInfo" style="margin-top: 10px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em;"></p>`;
+  container.appendChild(loadMoreWrap);
 
-  Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
-    const section = document.createElement('div');
-    section.innerHTML = `<div class="section-date">${date}</div>`;
-    const grid = document.createElement('div');
-    grid.className = 'photo-grid';
+  const first = Math.min(PHOTOS_PER_PAGE, data.length);
+  renderPhotos(data, 0, first);
+  displayedCount = first;
+  updateLoadMore();
+}
 
-    grouped[date].forEach(p => {
-      const card = document.createElement('div');
-      card.className = `photo-card${p.wide ? ' wide' : ''}`;
-      card.innerHTML = `
-        <img src="${driveUrl(p.id)}" alt="${p.caption}"
-             onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=placeholder-icon>⚠️</div><div class=placeholder-text>Foto tidak ditemukan</div></div>'">
-        <div class="photo-overlay">
-          <span class="photo-caption">${p.caption}</span>
-        </div>`;
-      card.onclick = () => openLightbox(p.globalIdx);
-      grid.appendChild(card);
-    });
+function loadMore() {
+  const next = Math.min(displayedCount + PHOTOS_PER_PAGE, filteredPhotos.length);
+  renderPhotos(filteredPhotos, displayedCount, next);
+  displayedCount = next;
+  updateLoadMore();
+}
 
-    section.appendChild(grid);
-    container.appendChild(section);
-  });
+function updateLoadMore() {
+  const wrap = document.getElementById('loadMoreWrap');
+  const info = document.getElementById('loadMoreInfo');
+  if (displayedCount < filteredPhotos.length) {
+    wrap.style.display = 'block';
+    const remaining = filteredPhotos.length - displayedCount;
+    info.textContent = `Menampilkan ${displayedCount} dari ${filteredPhotos.length} foto · ${remaining} foto lagi`;
+  } else {
+    wrap.style.display = displayedCount > PHOTOS_PER_PAGE ? 'block' : 'none';
+    if (info) info.textContent = `Semua ${filteredPhotos.length} foto ditampilkan`;
+    const btn = document.getElementById('loadMoreBtn');
+    if (btn) btn.style.display = 'none';
+  }
 }
 
 function filterGallery(filter) {
   activeFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  const data = filter === 'semua' ? photos : photos.filter((p, i) => p.date === filter);
+  const data = filter === 'semua' ? photos : photos.filter(p => p.date === filter);
   buildGallery(data.map((p, i) => ({ ...p, globalIdx: photos.indexOf(p) })));
 }
 
