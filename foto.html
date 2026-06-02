@@ -81,8 +81,8 @@
     <div class="instruction-box">
       <strong>📌 Cara tambah foto baru</strong><br><br>
       1. Login <code>cloudinary.com</code> → Media Library → Upload foto<br>
-      2. Klik foto → salin Public ID<br>
-      3. Buka <code>foto.html</code> → tambah di <code>const photos = [</code>
+      2. Klik foto yang diupload → salin Public ID-nya (contoh: <code>pitamaha5/foto-lantai-1</code>)<br>
+      3. Buka <code>foto.html</code> → cari <code>const photos = [</code> → tambahkan entri baru
     </div>
     <div id="galleryContainer"></div>
     <div id="videoContainer"></div>
@@ -177,7 +177,6 @@ function renderPhotos(data, startIdx, endIdx) {
       img.alt = p.caption;
       img.loading = 'lazy';
       img.decoding = 'async';
-      img.onerror = () => { img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100%" height="100%" fill="%231a1d2e"/><text x="50%" y="50%" fill="%236b7280" text-anchor="middle" dy=".3em">Gagal muat</text></svg>'; };
       card.appendChild(img);
       const cap = document.createElement('div');
       cap.className = 'photo-caption';
