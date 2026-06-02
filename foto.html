@@ -1,8 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foto Proyek — Pitamaha 5</title>
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e4e6eb; line-height: 1.6; }
+    a { color: #a78bfa; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Header */
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid #2a2d3a; }
+    .header h1 { font-size: 1.3rem; font-weight: 600; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.9rem; color: #9ca3af; }
+    .nav-links { display: flex; gap: 20px; }
+    .nav-links a { font-size: 0.9rem; color: #9ca3af; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: #e4e6eb; text-decoration: none; }
+
+    /* Main Content */
+    .main { max-width: 1200px; margin: 0 auto; padding: 32px; }
+    .subtitle { font-size: 0.85rem; color: #6b7280; margin-bottom: 24px; }
+
+    /* Stats Bar */
+    .stats-bar { display: flex; gap: 32px; margin-bottom: 24px; flex-wrap: wrap; }
+    .stat-item { font-size: 0.9rem; }
+    .stat-value { font-weight: 600; color: #e4e6eb; }
+    .stat-label { color: #6b7280; }
+
+    /* Filter Tabs */
+    .filter-bar { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+    .filter-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid #374151; background: transparent; color: #9ca3af; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+    .filter-btn:hover { border-color: #a78bfa; color: #e4e6eb; }
+    .filter-btn.active { background: #a78bfa; border-color: #a78bfa; color: #0f1117; font-weight: 600; }
+
+    /* Gallery Grid */
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .photo-card { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; aspect-ratio: 4/3; background: #1a1d2e; }
+    .photo-card.wide { grid-column: span 2; aspect-ratio: 16/9; }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .photo-card:hover img { transform: scale(1.05); }
+    .photo-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); font-size: 0.8rem; color: #e4e6eb; }
+
+    /* Date Section */
+    .date-section { margin-bottom: 32px; }
+    .date-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: #a78bfa; }
+
+    /* Video Cards */
+    .video-card { padding: 16px; background: #1a1d2e; border-radius: 12px; margin-bottom: 12px; font-size: 0.9rem; }
+
+    /* Load More */
+    .load-more-wrap { text-align: center; padding: 24px 0; }
+    .load-more-btn { padding: 10px 28px; border-radius: 8px; border: 1px solid #374151; background: transparent; color: #e4e6eb; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+    .load-more-btn:hover { border-color: #a78bfa; background: #a78bfa; color: #0f1117; }
+    .load-more-info { font-size: 0.8rem; color: #6b7280; margin-top: 8px; }
+
+    /* Lightbox */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 80vh; border-radius: 8px; }
+    .lightbox-caption { margin-top: 16px; font-size: 0.95rem; color: #e4e6eb; text-align: center; }
+    .lightbox-close { position: absolute; top: 24px; right: 32px; font-size: 2rem; color: #e4e6eb; cursor: pointer; background: none; border: none; }
+    .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); font-size: 2.5rem; color: #e4e6eb; cursor: pointer; background: none; border: none; padding: 16px; }
+    .lightbox-prev { left: 16px; }
+    .lightbox-next { right: 16px; }
+
+    /* Empty State */
+    .empty-state { text-align: center; padding: 64px 32px; color: #6b7280; }
+    .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+
+    /* Instruction Box */
+    .instruction-box { background: #1a1d2e; border-left: 3px solid #a78bfa; padding: 20px 24px; border-radius: 0 12px 12px 0; margin-bottom: 32px; font-size: 0.85rem; }
+    .instruction-box strong { color: #a78bfa; }
+    .instruction-box code { background: #2a2d3a; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }
+
+    @media (max-width: 768px) {
+      .header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .photo-card.wide { grid-column: span 1; }
+      .stats-bar { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <a href="index.html" class="back-link">← Kembali</a>
+    <h1>Pitamaha 5</h1>
+    <div class="nav-links">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="foto.html" class="active">Foto</a>
+      <a href="pembahasan.html">Pembahasan</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+    <div class="subtitle">KBP - Pitaloka · Dokumentasi Lapangan</div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-item"><span id="photoCount" class="stat-value">— foto</span></div>
+      <div class="stat-item"><span class="stat-label">Terakhir diperbarui:</span> <span id="lastUpdate" class="stat-value">—</span></div>
+      <div class="stat-item"><span id="videoCount" class="stat-value">Belum ada video</span></div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div id="filterBar" class="filter-bar"></div>
+
+    <!-- INSTRUCTION BOX -->
+    <div class="instruction-box">
+      <strong>📌 Cara tambah foto baru</strong><br><br>
+      1. Login <code>cloudinary.com</code> → Media Library → Upload foto<br>
+      2. Klik foto yang diupload → salin Public ID-nya (contoh: <code>pitamaha5/foto-lantai-1</code>)<br>
+      3. Buka <code>foto.html</code> → cari <code>const photos = [</code> → tambahkan entri baru
+    </div>
+
+    <!-- GALLERY CONTAINER -->
+    <div id="galleryContainer"></div>
+
+    <!-- VIDEO CONTAINER -->
+    <div id="videoContainer"></div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">×</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navigatePhoto(-1)">‹</button>
+    <img id="lightboxImg" src="" alt="" />
+    <div id="lightboxCaption" class="lightbox-caption"></div>
+    <button class="lightbox-nav lightbox-next" onclick="navigatePhoto(1)">›</button>
+  </div>
+
 <script>
 // ═══════════════════════════════════════════════
 // KONFIGURASI - ISI BAGIAN INI DULU!
 // ═══════════════════════════════════════════════
-const CLOUD_NAME = 'drzht9qq1'; // Ganti dengan nama cloudinary kamu (contoh: pitamaha5)
+const CLOUD_NAME = 'drzht9qq1'; // Nama cloudinary kamu
 
 // ═══════════════════════════════════════════════
 // DAFTAR FOTO — tambah/hapus di sini
@@ -39,17 +175,18 @@ const videos = [
 
 function buildVideos() {
   const container = document.getElementById('videoContainer');
-  document.getElementById('videoCount').textContent =
-    videos.length > 0 ? `${videos.length} video` : 'Belum ada video';
+  const countEl = document.getElementById('videoCount');
+  if (countEl) {
+    countEl.textContent = videos.length > 0 ? `${videos.length} video` : 'Belum ada video';
+  }
 
-  if (videos.length === 0) return;
-  container.innerHTML = '' ;
+  if (!container || videos.length === 0) return;
+  container.innerHTML = '';
 
   videos.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(v => {
     const card = document.createElement('div');
     card.className = 'video-card';
-    card.innerHTML = `
-       ${v.date} ${v.caption} `;
+    card.innerHTML = `<strong>${v.date}</strong> — ${v.caption}`;
     container.appendChild(card);
   });
 }
@@ -59,7 +196,6 @@ function buildVideos() {
 // ═══════════════════════════════════════════════
 
 function driveUrl(id) {
-  // Cloudinary: auto quality + format untuk loading lebih cepat
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${id}`;
 }
 
@@ -71,8 +207,8 @@ let activeFilter = 'semua';
 
 function renderPhotos(data, startIdx, endIdx) {
   const container = document.getElementById('galleryContainer');
+  if (!container) return;
 
-  // Kelompokkan slice yang akan dirender
   const slice = data.slice(startIdx, endIdx);
   const grouped = {};
   slice.forEach(p => {
@@ -80,18 +216,17 @@ function renderPhotos(data, startIdx, endIdx) {
     grouped[p.date].push(p);
   });
 
-  // Cek apakah section tanggal sudah ada (untuk append)
   Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
     let section = container.querySelector(`[data-date="${date}"]`);
     if (!section) {
       section = document.createElement('div');
       section.setAttribute('data-date', date);
-      section.innerHTML = ` ${date} `;
+      section.className = 'date-section';
+      section.innerHTML = `<div class="date-title">${date}</div>`;
       const grid = document.createElement('div');
       grid.className = 'photo-grid';
       grid.setAttribute('data-grid', date);
       section.appendChild(grid);
-      // Insert before load-more button if exists
       const loadMoreEl = document.getElementById('loadMoreWrap');
       if (loadMoreEl) container.insertBefore(section, loadMoreEl);
       else container.appendChild(section);
@@ -100,9 +235,7 @@ function renderPhotos(data, startIdx, endIdx) {
     grouped[date].forEach(p => {
       const card = document.createElement('div');
       card.className = `photo-card${p.wide ? ' wide' : ''}`;
-      card.innerHTML = `
-        
-${p.caption}`;
+      card.innerHTML = `<img src="${driveUrl(p.id)}" alt="${p.caption}" loading="lazy" /><div class="photo-caption">${p.caption}</div>`;
       card.onclick = () => openLightbox(p.globalIdx);
       grid.appendChild(card);
     });
@@ -113,25 +246,18 @@ function buildGallery(data) {
   filteredPhotos = data;
   displayedCount = 0;
   const container = document.getElementById('galleryContainer');
+  if (!container) return;
   container.innerHTML = '';
 
   if (data.length === 0) {
-    container.innerHTML = `
-      
-          ${photos.length === 0 ? 'Belum ada foto — tambahkan di bagian const photos' : 'Tidak ada foto untuk filter ini'}
-        `;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📷</div><p>${photos.length === 0 ? 'Belum ada foto — tambahkan di bagian const photos' : 'Tidak ada foto untuk filter ini'}</p></div>`;
     return;
   }
 
-  // Tambahkan load-more wrapper dulu
   const loadMoreWrap = document.createElement('div');
   loadMoreWrap.id = 'loadMoreWrap';
-  loadMoreWrap.style.cssText = 'padding: 36px 0; text-align: center; display: none;';
-  loadMoreWrap.innerHTML = `
-    
-      Tampilkan lebih banyak
-    
-`;
+  loadMoreWrap.className = 'load-more-wrap';
+  loadMoreWrap.innerHTML = `<button id="loadMoreBtn" class="load-more-btn" onclick="loadMore()">Tampilkan lebih banyak</button><div id="loadMoreInfo" class="load-more-info"></div>`;
   container.appendChild(loadMoreWrap);
 
   const first = Math.min(PHOTOS_PER_PAGE, data.length);
@@ -150,14 +276,17 @@ function loadMore() {
 function updateLoadMore() {
   const wrap = document.getElementById('loadMoreWrap');
   const info = document.getElementById('loadMoreInfo');
+  const btn = document.getElementById('loadMoreBtn');
+  if (!wrap) return;
+
   if (displayedCount < filteredPhotos.length) {
     wrap.style.display = 'block';
     const remaining = filteredPhotos.length - displayedCount;
-    info.textContent = `Menampilkan ${displayedCount} dari ${filteredPhotos.length} foto · ${remaining} foto lagi`;
+    if (info) info.textContent = `Menampilkan ${displayedCount} dari ${filteredPhotos.length} foto · ${remaining} foto lagi`;
+    if (btn) btn.style.display = 'inline-block';
   } else {
     wrap.style.display = displayedCount > PHOTOS_PER_PAGE ? 'block' : 'none';
     if (info) info.textContent = `Semua ${filteredPhotos.length} foto ditampilkan`;
-    const btn = document.getElementById('loadMoreBtn');
     if (btn) btn.style.display = 'none';
   }
 }
@@ -165,7 +294,8 @@ function updateLoadMore() {
 function filterGallery(filter) {
   activeFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  const clicked = Array.from(document.querySelectorAll('.filter-btn')).find(b => b.textContent === filter);
+  if (clicked) clicked.classList.add('active');
   const data = filter === 'semua' ? photos : photos.filter(p => p.date === filter);
   buildGallery(data.map((p, i) => ({ ...p, globalIdx: photos.indexOf(p) })));
 }
@@ -173,14 +303,17 @@ function filterGallery(filter) {
 function openLightbox(idx) {
   currentIndex = idx;
   const p = photos[idx];
-  document.getElementById('lightboxImg').src = driveUrl(p.id);
-  document.getElementById('lightboxCaption').textContent = `${p.date} — ${p.caption}`;
-  document.getElementById('lightbox').classList.add('open');
-  document.body.style.overflow = 'hidden';
+  const img = document.getElementById('lightboxImg');
+  const cap = document.getElementById('lightboxCaption');
+  const lb = document.getElementById('lightbox');
+  if (img) img.src = driveUrl(p.id);
+  if (cap) cap.textContent = `${p.date} — ${p.caption}`;
+  if (lb) { lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
 }
 
 function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('open');
   document.body.style.overflow = '';
 }
 
@@ -190,7 +323,8 @@ function navigatePhoto(dir) {
 }
 
 document.addEventListener('keydown', e => {
-  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  const lb = document.getElementById('lightbox');
+  if (!lb || !lb.classList.contains('open')) return;
   if (e.key === 'Escape') closeLightbox();
   if (e.key === 'ArrowLeft') navigatePhoto(-1);
   if (e.key === 'ArrowRight') navigatePhoto(1);
@@ -198,28 +332,32 @@ document.addEventListener('keydown', e => {
 
 // Init
 function init() {
-  // Update count & date
-  document.getElementById('photoCount').textContent =
-    photos.length > 0 ? `${photos.length} foto` : 'Belum ada foto';
+  const photoCountEl = document.getElementById('photoCount');
+  const lastUpdateEl = document.getElementById('lastUpdate');
+  const filterBar = document.getElementById('filterBar');
 
-  const dates = photos.map(p => p.date);
-  if (dates.length > 0) {
-    const sorted = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
-    document.getElementById('lastUpdate').textContent = sorted[0];
-  } else {
-    document.getElementById('lastUpdate').textContent = '—';
+  if (photoCountEl) {
+    photoCountEl.textContent = photos.length > 0 ? `${photos.length} foto` : 'Belum ada foto';
   }
 
-  // Build filter tabs
-  const uniqueDates = [...new Set(photos.map(p => p.date))].sort((a, b) => new Date(b) - new Date(a));
-  const filterBar = document.getElementById('filterBar');
-  uniqueDates.forEach(date => {
-    const btn = document.createElement('button');
-    btn.className = 'filter-btn';
-    btn.textContent = date;
-    btn.onclick = (e) => filterGallery(date);
-    filterBar.appendChild(btn);
-  });
+  const dates = photos.map(p => p.date);
+  if (dates.length > 0 && lastUpdateEl) {
+    const sorted = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
+    lastUpdateEl.textContent = sorted[0];
+  } else if (lastUpdateEl) {
+    lastUpdateEl.textContent = '—';
+  }
+
+  if (filterBar) {
+    const uniqueDates = [...new Set(photos.map(p => p.date))].sort((a, b) => new Date(b) - new Date(a));
+    uniqueDates.forEach(date => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.textContent = date;
+      btn.onclick = () => filterGallery(date);
+      filterBar.appendChild(btn);
+    });
+  }
 
   buildGallery(photos.map((p, i) => ({ ...p, globalIdx: i })));
   buildVideos();
@@ -227,3 +365,5 @@ function init() {
 
 init();
 </script>
+</body>
+</html>
