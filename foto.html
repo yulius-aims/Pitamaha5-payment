@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foto Proyek — Pitamaha 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; font-family: 'Outfit', sans-serif; background: #0C0F14; color: #F0EDE6; }
+
+:root {
+  --bg: #0C0F14;
+  --bg2: #131720;
+  --bg3: #1A2030;
+  --gold: rgba(210,175,100,0.85);
+  --gold2: rgba(210,175,100,0.5);
+  --border: rgba(210,175,100,0.12);
+  --text: #F0EDE6;
+  --muted: rgba(255,255,255,0.38);
+}
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 64px;
+  background: rgba(12,15,20,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--border);
+}
+.nav-back {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+.nav-back:hover { color: var(--gold); }
+.nav-back-arrow { font-size: 16px; transition: transform 0.2s; }
+.nav-back:hover .nav-back-arrow { transform: translateX(-3px); }
+.nav-title {
+  font-family: Arial, sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.55);
+}
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  text-decoration: none; font-size: 12px; font-weight: 400;
+  letter-spacing: 0.06em; color: var(--muted); transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--gold); }
+
+/* ── PAGE ── */
+.page { padding: 64px 0 60px; }
+
+/* ── HEADER ── */
+.page-header {
+  padding: 48px 52px 36px;
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.header-left {}
+.page-eyebrow {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px; font-weight: 500;
+}
+.page-title {
+  font-family: Arial, sans-serif;
+  font-size: 36px; font-weight: 800; color: var(--text);
+  line-height: 1;
+}
+.photo-count {
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 0.08em; margin-top: 8px;
+}
+.header-right { text-align: right; }
+.update-label {
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted);
+  margin-bottom: 4px;
+}
+.update-date {
+  font-size: 13px; font-weight: 500; color: var(--text);
+}
+
+/* ── FILTER TABS ── */
+.filter-bar {
+  padding: 20px 52px;
+  display: flex; gap: 8px; align-items: center;
+  border-bottom: 0.5px solid var(--border);
+  overflow-x: auto;
+}
+.filter-btn {
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(255,255,255,0.1);
+  background: transparent;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--gold2); color: var(--text); }
+.filter-btn.active {
+  background: rgba(210,175,100,0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ── GALLERY ── */
+.gallery-section { padding: 36px 52px; }
+.section-date {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold2);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-date::after {
+  content: ''; flex: 1; height: 0.5px; background: var(--border);
+}
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 40px;
+}
+.photo-card {
+  position: relative;
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg2);
+  border: 0.5px solid rgba(255,255,255,0.06);
+}
+.photo-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease, filter 0.3s;
+  filter: brightness(0.92);
+}
+.photo-card:hover img {
+  transform: scale(1.04);
+  filter: brightness(1);
+}
+.photo-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(4,6,10,0.75) 0%, transparent 50%);
+  opacity: 0; transition: opacity 0.3s;
+  display: flex; align-items: flex-end;
+  padding: 16px;
+}
+.photo-card:hover .photo-overlay { opacity: 1; }
+.photo-caption {
+  font-size: 12px; font-weight: 400;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.4;
+}
+/* Wide card: 1 foto bisa jadi 2 kolom */
+.photo-card.wide { grid-column: span 2; }
+
+/* Placeholder card */
+.photo-placeholder {
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  border: 0.5px dashed rgba(210,175,100,0.2);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  background: var(--bg2);
+}
+.placeholder-icon { font-size: 28px; opacity: 0.2; }
+.placeholder-text { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
+
+/* ── CARA TAMBAH FOTO (info box) ── */
+.add-guide {
+  margin: 0 52px 48px;
+  padding: 20px 24px;
+  border-radius: 10px;
+  border: 0.5px solid var(--border);
+  background: var(--bg2);
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.guide-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.guide-content {}
+.guide-title {
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.guide-steps {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.guide-steps li {
+  font-size: 12px; color: var(--muted); line-height: 1.5;
+  padding-left: 16px; position: relative;
+}
+.guide-steps li::before {
+  content: attr(data-n);
+  position: absolute; left: 0;
+  color: var(--gold2); font-weight: 600;
+}
+.guide-code {
+  display: inline-block;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  color: var(--gold);
+}
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  display: none;
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(4,6,10,0.95);
+  backdrop-filter: blur(8px);
+  align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+.lightbox.open { display: flex; }
+.lightbox-img {
+  max-width: 90vw; max-height: 82vh;
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.lightbox-caption {
+  font-size: 13px; color: rgba(255,255,255,0.6);
+  letter-spacing: 0.04em;
+}
+.lightbox-close {
+  position: fixed; top: 24px; right: 32px;
+  font-size: 28px; color: var(--muted);
+  cursor: pointer; transition: color 0.2s;
+  background: none; border: none;
+}
+.lightbox-close:hover { color: var(--text); }
+.lightbox-nav {
+  position: fixed; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.06);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: var(--muted);
+  cursor: pointer; transition: all 0.2s;
+}
+.lightbox-nav:hover { color: var(--text); background: rgba(255,255,255,0.1); }
+.lightbox-prev { left: 24px; }
+.lightbox-next { right: 24px; }
+
+/* ── VIDEO SECTION ── */
+.video-section {
+  padding: 0 52px 48px;
+}
+.section-title {
+  font-family: Arial, sans-serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--text); margin-bottom: 6px;
+}
+.section-subtitle {
+  font-size: 12px; color: var(--muted);
+  letter-spacing: 0.06em; margin-bottom: 28px;
+}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+.video-card {
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg2);
+  border: 0.5px solid rgba(255,255,255,0.06);
+}
+.video-card iframe {
+  width: 100%; aspect-ratio: 16/9;
+  border: none; display: block;
+}
+.video-info {
+  padding: 12px 16px 14px;
+  border-top: 0.5px solid var(--border);
+}
+.video-date {
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold2);
+  margin-bottom: 4px;
+}
+.video-caption {
+  font-size: 13px; font-weight: 500; color: var(--text);
+}
+.section-divider {
+  margin: 0 52px 36px;
+  height: 0.5px; background: var(--border);
+}
+
+/* ── ANIMASI ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+.f1{animation:fadeUp .5s .05s both;} .f2{animation:fadeUp .5s .15s both;} .f3{animation:fadeUp .5s .25s both;}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-back" href="index.html">
+    <span class="nav-back-arrow">←</span>
+    Kembali
+  </a>
+  <span class="nav-title">Pitamaha 5</span>
+  <ul class="nav-links">
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="foto.html" class="active">Foto</a></li>
+    <li><a href="pembahasan.html">Pembahasan</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header f1">
+    <div class="header-left">
+      <p class="page-eyebrow">KBP - Pitaloka · Dokumentasi Lapangan</p>
+      <h1 class="page-title">Foto & Video</h1>
+      <p class="photo-count" id="photoCount">— foto</p>
+    </div>
+    <div class="header-right">
+      <p class="update-label">Terakhir diperbarui</p>
+      <p class="update-date" id="lastUpdate">—</p>
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar f2" id="filterBar">
+    <button class="filter-btn active" onclick="filterGallery('semua')">Semua</button>
+    <!-- Tab tanggal ditambah otomatis oleh JS -->
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-section f3" id="galleryContainer"></div>
+
+  <!-- CARA TAMBAH FOTO -->
+  <div class="add-guide">
+    <span class="guide-icon">📌</span>
+    <div class="guide-content">
+      <p class="guide-title">Cara tambah foto baru</p>
+      <ol class="guide-steps">
+        <li data-n="1.">Login <span class="guide-code">cloudinary.com</span> → <strong>Media Library</strong> → Upload foto</li>
+        <li data-n="2.">Klik foto yang diupload → salin <strong>Public ID</strong>-nya (contoh: <span class="guide-code">pitamaha5/foto-lantai-1</span>)</li>
+        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const photos = [</span> → tambahkan baris baru sesuai contoh</li>
+        <li data-n="4.">Commit & Push via GitHub Desktop — foto langsung tampil</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- DIVIDER -->
+  <div class="section-divider"></div>
+
+  <!-- VIDEO SECTION -->
+  <div class="video-section f3">
+    <p class="page-eyebrow" style="margin-bottom:8px">YouTube Unlisted · Dokumentasi Video</p>
+    <h2 class="section-title">Video Proyek</h2>
+    <p class="section-subtitle" id="videoCount">— video</p>
+    <div class="video-grid" id="videoContainer">
+      <div style="text-align:center;padding:48px;color:var(--muted);grid-column:1/-1">
+        <div style="font-size:36px;opacity:0.2;margin-bottom:12px">🎥</div>
+        <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase">Belum ada video — tambahkan di bagian const videos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARA TAMBAH VIDEO -->
+  <div class="add-guide" style="margin-top:0">
+    <span class="guide-icon">🎬</span>
+    <div class="guide-content">
+      <p class="guide-title">Cara tambah video baru</p>
+      <ol class="guide-steps">
+        <li data-n="1.">Upload video ke YouTube → saat upload pilih visibilitas <strong>"Unlisted"</strong> (tidak muncul di pencarian)</li>
+        <li data-n="2.">Salin link video, ambil ID-nya: <span class="guide-code">youtube.com/watch?v=<strong>[ID INI]</strong></span></li>
+        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const videos = [</span> → tambahkan baris baru sesuai contoh</li>
+        <li data-n="4.">Commit & Push via GitHub Desktop — video langsung tampil</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="navigatePhoto(-1)">‹</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <p class="lightbox-caption" id="lightboxCaption"></p>
+  <button class="lightbox-nav lightbox-next" onclick="navigatePhoto(1)">›</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// SETTING — isi Cloud Name Cloudinary Jul di sini
+const CLOUD_NAME = 'drzht9qq1';
+// ═══════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════
+// DAFTAR FOTO — tambahkan di sini
+// Format: { id: 'PUBLIC_ID_CLOUDINARY', date: 'DD Mon YYYY', caption: 'Keterangan', wide: false }
+// Public ID contoh: 'pitamaha5/foto-lantai-1'
+// ═══════════════════════════════════════════════
+const photos = [
+  // CONTOH — hapus dan ganti dengan foto asli:
+  // { id: 'pitamaha5/foto-awal-01', date: '1 Juni 2026', caption: 'Kondisi awal struktur lantai 1', wide: false },
+  // { id: 'pitamaha5/pengecoran-kolom', date: '1 Juni 2026', caption: 'Pengecoran kolom area barat', wide: true },
+  // { id: 'pitamaha5/dinding-panel', date: '8 Juni 2026', caption: 'Progress dinding panel', wide: false },
+];
+
+// ═══════════════════════════════════════════════
+// DAFTAR VIDEO — tambahkan di sini
+// Format: { id: 'YOUTUBE_VIDEO_ID', date: 'DD Mon YYYY', caption: 'Keterangan' }
+// YouTube ID contoh: dari link youtube.com/watch?v=dQw4w9WgXcQ → ID = dQw4w9WgXcQ
+// ═══════════════════════════════════════════════
+const videos = [
+  // CONTOH — hapus dan ganti dengan video asli:
+  // { id: 'dQw4w9WgXcQ', date: '1 Juni 2026', caption: 'Progress pengecoran lantai 2' },
+  // { id: 'abc123XYZ', date: '8 Juni 2026', caption: 'Pemasangan rangka atap' },
+];
+
+function buildVideos() {
+  const container = document.getElementById('videoContainer');
+  document.getElementById('videoCount').textContent =
+    videos.length > 0 ? `${videos.length} video` : 'Belum ada video';
+
+  if (videos.length === 0) return;
+  container.innerHTML = '';
+
+  videos.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <iframe src="https://www.youtube.com/embed/${v.id}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+      <div class="video-info">
+        <div class="video-date">${v.date}</div>
+        <div class="video-caption">${v.caption}</div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════
+// JANGAN EDIT DI BAWAH INI
+// ═══════════════════════════════════════════════
+
+function driveUrl(id) {
+  // Cloudinary: auto quality + format untuk loading lebih cepat
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${id}`;
+}
+
+let currentIndex = 0;
+let filteredPhotos = [];
+let activeFilter = 'semua';
+
+function buildGallery(data) {
+  filteredPhotos = data;
+  const container = document.getElementById('galleryContainer');
+  container.innerHTML = '';
+
+  if (data.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center; padding: 60px; color: var(--muted);">
+        <div style="font-size:40px;opacity:0.2;margin-bottom:12px">📷</div>
+        <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase">
+          ${photos.length === 0 ? 'Belum ada foto — tambahkan di bagian const photos' : 'Tidak ada foto untuk filter ini'}
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Kelompokkan per tanggal
+  const grouped = {};
+  data.forEach((p, globalIdx) => {
+    if (!grouped[p.date]) grouped[p.date] = [];
+    grouped[p.date].push({ ...p, globalIdx });
+  });
+
+  Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+    const section = document.createElement('div');
+    section.innerHTML = `<div class="section-date">${date}</div>`;
+    const grid = document.createElement('div');
+    grid.className = 'photo-grid';
+
+    grouped[date].forEach(p => {
+      const card = document.createElement('div');
+      card.className = `photo-card${p.wide ? ' wide' : ''}`;
+      card.innerHTML = `
+        <img src="${driveUrl(p.id)}" alt="${p.caption}"
+             onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=placeholder-icon>⚠️</div><div class=placeholder-text>Foto tidak ditemukan</div></div>'">
+        <div class="photo-overlay">
+          <span class="photo-caption">${p.caption}</span>
+        </div>`;
+      card.onclick = () => openLightbox(p.globalIdx);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+function filterGallery(filter) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  const data = filter === 'semua' ? photos : photos.filter((p, i) => p.date === filter);
+  buildGallery(data.map((p, i) => ({ ...p, globalIdx: photos.indexOf(p) })));
+}
+
+function openLightbox(idx) {
+  currentIndex = idx;
+  const p = photos[idx];
+  document.getElementById('lightboxImg').src = driveUrl(p.id);
+  document.getElementById('lightboxCaption').textContent = `${p.date} — ${p.caption}`;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function navigatePhoto(dir) {
+  currentIndex = (currentIndex + dir + photos.length) % photos.length;
+  openLightbox(currentIndex);
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navigatePhoto(-1);
+  if (e.key === 'ArrowRight') navigatePhoto(1);
+});
+
+// Init
+function init() {
+  // Update count & date
+  document.getElementById('photoCount').textContent =
+    photos.length > 0 ? `${photos.length} foto` : 'Belum ada foto';
+
+  const dates = photos.map(p => p.date);
+  if (dates.length > 0) {
+    const sorted = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
+    document.getElementById('lastUpdate').textContent = sorted[0];
+  } else {
+    document.getElementById('lastUpdate').textContent = '—';
+  }
+
+  // Build filter tabs
+  const uniqueDates = [...new Set(photos.map(p => p.date))].sort((a, b) => new Date(b) - new Date(a));
+  const filterBar = document.getElementById('filterBar');
+  uniqueDates.forEach(date => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = date;
+    btn.onclick = (e) => filterGallery(date);
+    filterBar.appendChild(btn);
+  });
+
+  buildGallery(photos.map((p, i) => ({ ...p, globalIdx: i })));
+  buildVideos();
+}
+
+init();
+</script>
+</body>
+</html>
