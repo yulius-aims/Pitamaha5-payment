@@ -362,79 +362,21 @@ nav {
       <ol class="guide-steps">
         <li data-n="1.">Login <span class="guide-code">cloudinary.com</span> → <strong>Media Library</strong> → Upload foto</li>
         <li data-n="2.">Klik foto yang diupload → salin <strong>Public ID</strong>-nya (contoh: <span class="guide-code">pitamaha5/foto-lantai-1</span>)</li>
-        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const photos = [</span> → tambahkan baris baru sesuai contoh</li>
-        <li data-n="4.">Commit & Push via GitHub Desktop — foto langsung tampil</li>
-      </ol>
-    </div>
-  </div>
-
-  <!-- DIVIDER -->
-  <div class="section-divider"></div>
-
-  <!-- VIDEO SECTION -->
-  <div class="video-section f3">
-    <p class="page-eyebrow" style="margin-bottom:8px">YouTube Unlisted · Dokumentasi Video</p>
-    <h2 class="section-title">Video Proyek</h2>
-    <p class="section-subtitle" id="videoCount">— video</p>
-    <div class="video-grid" id="videoContainer">
-      <div style="text-align:center;padding:48px;color:var(--muted);grid-column:1/-1">
-        <div style="font-size:36px;opacity:0.2;margin-bottom:12px">🎥</div>
-        <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase">Belum ada video — tambahkan di bagian const videos</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CARA TAMBAH VIDEO -->
-  <div class="add-guide" style="margin-top:0">
-    <span class="guide-icon">🎬</span>
-    <div class="guide-content">
-      <p class="guide-title">Cara tambah video baru</p>
-      <ol class="guide-steps">
-        <li data-n="1.">Upload video ke YouTube → saat upload pilih visibilitas <strong>"Unlisted"</strong> (tidak muncul di pencarian)</li>
-        <li data-n="2.">Salin link video, ambil ID-nya: <span class="guide-code">youtube.com/watch?v=<strong>[ID INI]</strong></span></li>
-        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const videos = [</span> → tambahkan baris baru sesuai contoh</li>
-        <li data-n="4.">Commit & Push via GitHub Desktop — video langsung tampil</li>
-      </ol>
-    </div>
-  </div>
-
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <button class="lightbox-nav lightbox-prev" onclick="navigatePhoto(-1)">‹</button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt="">
-  <p class="lightbox-caption" id="lightboxCaption"></p>
-  <button class="lightbox-nav lightbox-next" onclick="navigatePhoto(1)">›</button>
-</div>
-
-<script>
-// ═══════════════════════════════════════════════
-// SETTING — isi Cloud Name Cloudinary Jul di sini
-const CLOUD_NAME = 'drzht9qq1';
-// ═══════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════
-// DAFTAR FOTO — tambahkan di sini
-// Format: { id: 'PUBLIC_ID_CLOUDINARY', date: 'DD Mon YYYY', caption: 'Keterangan', wide: false }
-// Public ID contoh: 'pitamaha5/foto-lantai-1'
-// ═══════════════════════════════════════════════
-const photos = [
-  { id: "Pitamaha5/20251222-survei-12_uguay3", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 12", wide: false },
-  { id: "Pitamaha5/20251222-survei-11_vllyhu", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 11", wide: false },
-  { id: "Pitamaha5/20251222-survei-07_ri432g", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 07", wide: false },
-  { id: "Pitamaha5/20251222-survei-13_j1cpxr", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 13", wide: false },
-  { id: "Pitamaha5/20251222-survei-14_ieoeme", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 14", wide: false },
-  { id: "Pitamaha5/20251222-survei-02_e1yjpj", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 02", wide: false },
-  { id: "Pitamaha5/20251222-survei-09_mx23l6", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 09", wide: false },
-  { id: "Pitamaha5/20251222-survei-10_y9ywax", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 10", wide: false },
-  { id: "Pitamaha5/20251222-survei-05_hmbyvi", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 05", wide: false },
-  { id: "Pitamaha5/20251222-survei-06_gnkynx", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 06", wide: false },
-  { id: "Pitamaha5/20251222-survei-03_krknpm", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 03", wide: false },
-  { id: "Pitamaha5/20251222-survei-04_egndlp", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 04", wide: false },
-  { id: "Pitamaha5/20251222-survei-01_vakmu5", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 01", wide: false },
-  { id: "Pitamaha5/20251222-survei-08_lq7unn", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 08", wide: false },
+        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const photos = [
+  { id: "20251222-survei-12_uguay3", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 12", wide: false },
+  { id: "20251222-survei-11_vllyhu", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 11", wide: false },
+  { id: "20251222-survei-07_ri432g", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 07", wide: false },
+  { id: "20251222-survei-13_j1cpxr", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 13", wide: false },
+  { id: "20251222-survei-14_ieoeme", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 14", wide: false },
+  { id: "20251222-survei-02_e1yjpj", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 02", wide: false },
+  { id: "20251222-survei-09_mx23l6", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 09", wide: false },
+  { id: "20251222-survei-10_y9ywax", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 10", wide: false },
+  { id: "20251222-survei-05_hmbyvi", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 05", wide: false },
+  { id: "20251222-survei-06_gnkynx", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 06", wide: false },
+  { id: "20251222-survei-03_krknpm", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 03", wide: false },
+  { id: "20251222-survei-04_egndlp", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 04", wide: false },
+  { id: "20251222-survei-01_vakmu5", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 01", wide: false },
+  { id: "20251222-survei-08_lq7unn", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 08", wide: false },
 ];
 
 // ═══════════════════════════════════════════════
