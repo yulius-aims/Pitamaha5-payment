@@ -22,7 +22,7 @@ html, body { min-height: 100%; font-family: 'Outfit', sans-serif; background: #0
   --muted: rgba(255,255,255,0.38);
 }
 
-/* ── NAVBAR ── */
+/* NAVBAR */
 nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
@@ -57,16 +57,15 @@ nav {
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--gold); }
 
-/* ── PAGE ── */
+/* PAGE */
 .page { padding: 64px 0 60px; }
 
-/* ── HEADER ── */
+/* HEADER */
 .page-header {
   padding: 48px 52px 36px;
   border-bottom: 0.5px solid var(--border);
   display: flex; align-items: flex-end; justify-content: space-between;
 }
-.header-left {}
 .page-eyebrow {
   font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
   color: var(--gold); margin-bottom: 10px; font-weight: 500;
@@ -80,7 +79,6 @@ nav {
   font-size: 11px; color: var(--muted);
   letter-spacing: 0.08em; margin-top: 8px;
 }
-.header-right { text-align: right; }
 .update-label {
   font-size: 10px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--muted);
@@ -90,7 +88,7 @@ nav {
   font-size: 13px; font-weight: 500; color: var(--text);
 }
 
-/* ── FILTER TABS ── */
+/* FILTER */
 .filter-bar {
   padding: 20px 52px;
   display: flex; gap: 8px; align-items: center;
@@ -117,7 +115,7 @@ nav {
   color: var(--gold);
 }
 
-/* ── GALLERY ── */
+/* GALLERY */
 .gallery-section { padding: 36px 52px; }
 .section-date {
   font-size: 11px; font-weight: 600;
@@ -167,10 +165,7 @@ nav {
   color: rgba(255,255,255,0.85);
   line-height: 1.4;
 }
-/* Wide card: 1 foto bisa jadi 2 kolom */
 .photo-card.wide { grid-column: span 2; }
-
-/* Placeholder card */
 .photo-placeholder {
   aspect-ratio: 4/3;
   border-radius: 8px;
@@ -183,7 +178,7 @@ nav {
 .placeholder-icon { font-size: 28px; opacity: 0.2; }
 .placeholder-text { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; }
 
-/* ── CARA TAMBAH FOTO (info box) ── */
+/* ADD GUIDE */
 .add-guide {
   margin: 0 52px 48px;
   padding: 20px 24px;
@@ -193,7 +188,6 @@ nav {
   display: flex; gap: 16px; align-items: flex-start;
 }
 .guide-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
-.guide-content {}
 .guide-title {
   font-size: 12px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
@@ -222,7 +216,7 @@ nav {
   color: var(--gold);
 }
 
-/* ── LIGHTBOX ── */
+/* LIGHTBOX */
 .lightbox {
   display: none;
   position: fixed; inset: 0; z-index: 999;
@@ -264,7 +258,7 @@ nav {
 .lightbox-prev { left: 24px; }
 .lightbox-next { right: 24px; }
 
-/* ── VIDEO SECTION ── */
+/* VIDEO SECTION */
 .video-section {
   padding: 0 52px 48px;
 }
@@ -309,7 +303,7 @@ nav {
   height: 0.5px; background: var(--border);
 }
 
-/* ── ANIMASI ── */
+/* ANIMASI */
 @keyframes fadeUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
 .f1{animation:fadeUp .5s .05s both;} .f2{animation:fadeUp .5s .15s both;} .f3{animation:fadeUp .5s .25s both;}
 </style>
@@ -347,8 +341,8 @@ nav {
 
   <!-- FILTER -->
   <div class="filter-bar f2" id="filterBar">
-    <button class="filter-btn active" onclick="filterGallery('semua')">Semua</button>
-    <!-- Tab tanggal ditambah otomatis oleh JS -->
+    <button class="filter-btn active" data-filter="semua">Semua</button>
+    <!-- tab tanggal akan ditambahkan JS -->
   </div>
 
   <!-- GALLERY -->
@@ -362,7 +356,39 @@ nav {
       <ol class="guide-steps">
         <li data-n="1.">Login <span class="guide-code">cloudinary.com</span> → <strong>Media Library</strong> → Upload foto</li>
         <li data-n="2.">Klik foto yang diupload → salin <strong>Public ID</strong>-nya (contoh: <span class="guide-code">pitamaha5/foto-lantai-1</span>)</li>
-        <li data-n="3.">Buka <span class="guide-code">foto.html</span> → cari <span class="guide-code">const photos = [
+        <li data-n="3.">Buka file ini → cari array <span class="guide-code">const photos</span> → tambah objek baru</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- VIDEO SECTION -->
+  <div class="video-section">
+    <div class="section-title">Video Dokumentasi</div>
+    <div class="section-subtitle">Progres dan kegiatan lapangan</div>
+    <div id="videoContainer" class="video-grid"></div>
+    <p id="videoCount" style="margin-top: 20px; font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-align: center;"></p>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); navigatePhoto(-1)">←</button>
+  <img class="lightbox-img" id="lightboxImg" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+  <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); navigatePhoto(1)">→</button>
+</div>
+
+<script>
+// ============================================================
+// 1. KONFIGURASI CLOUDINARY — GANTI DENGAN CLOUD NAME ANDA
+// ============================================================
+const CLOUD_NAME = 'YOUR_CLOUDINARY_CLOUD_NAME';  // <-- WAJIB GANTI
+
+// ============================================================
+// 2. DATA FOTO (Public ID dari Cloudinary)
+// ============================================================
+const photos = [
   { id: "20251222-survei-12_uguay3", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 12", wide: false },
   { id: "20251222-survei-11_vllyhu", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 11", wide: false },
   { id: "20251222-survei-07_ri432g", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 07", wide: false },
@@ -376,49 +402,21 @@ nav {
   { id: "20251222-survei-03_krknpm", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 03", wide: false },
   { id: "20251222-survei-04_egndlp", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 04", wide: false },
   { id: "20251222-survei-01_vakmu5", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 01", wide: false },
-  { id: "20251222-survei-08_lq7unn", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 08", wide: false },
+  { id: "20251222-survei-08_lq7unn", date: "22 Desember 2025", caption: "Survey kondisi awal - foto 08", wide: false }
 ];
 
-// ═══════════════════════════════════════════════
-// DAFTAR VIDEO — tambahkan di sini
-// Format: { id: 'YOUTUBE_VIDEO_ID', date: 'DD Mon YYYY', caption: 'Keterangan' }
-// YouTube ID contoh: dari link youtube.com/watch?v=dQw4w9WgXcQ → ID = dQw4w9WgXcQ
-// ═══════════════════════════════════════════════
+// ============================================================
+// 3. DATA VIDEO (YouTube ID) — isi jika ada
+// ============================================================
 const videos = [
-  // CONTOH — hapus dan ganti dengan video asli:
-  // { id: 'dQw4w9WgXcQ', date: '1 Juni 2026', caption: 'Progress pengecoran lantai 2' },
-  // { id: 'abc123XYZ', date: '8 Juni 2026', caption: 'Pemasangan rangka atap' },
+  // Contoh: { id: 'dQw4w9WgXcQ', date: '1 Juni 2026', caption: 'Progress pengecoran lantai 2' }
 ];
 
-function buildVideos() {
-  const container = document.getElementById('videoContainer');
-  document.getElementById('videoCount').textContent =
-    videos.length > 0 ? `${videos.length} video` : 'Belum ada video';
-
-  if (videos.length === 0) return;
-  container.innerHTML = '';
-
-  videos.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(v => {
-    const card = document.createElement('div');
-    card.className = 'video-card';
-    card.innerHTML = `
-      <iframe src="https://www.youtube.com/embed/${v.id}"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen loading="lazy"></iframe>
-      <div class="video-info">
-        <div class="video-date">${v.date}</div>
-        <div class="video-caption">${v.caption}</div>
-      </div>`;
-    container.appendChild(card);
-  });
-}
-
-// ═══════════════════════════════════════════════
-// JANGAN EDIT DI BAWAH INI
-// ═══════════════════════════════════════════════
+// ============================================================
+// 4. JANGAN UBAH KODE DI BAWAH INI (kecuali Anda paham)
+// ============================================================
 
 function driveUrl(id) {
-  // Cloudinary: auto quality + format untuk loading lebih cepat
   return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/q_auto,f_auto/${id}`;
 }
 
@@ -430,8 +428,6 @@ let activeFilter = 'semua';
 
 function renderPhotos(data, startIdx, endIdx) {
   const container = document.getElementById('galleryContainer');
-
-  // Kelompokkan slice yang akan dirender
   const slice = data.slice(startIdx, endIdx);
   const grouped = {};
   slice.forEach(p => {
@@ -439,7 +435,6 @@ function renderPhotos(data, startIdx, endIdx) {
     grouped[p.date].push(p);
   });
 
-  // Cek apakah section tanggal sudah ada (untuk append)
   Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
     let section = container.querySelector(`[data-date="${date}"]`);
     if (!section) {
@@ -450,7 +445,6 @@ function renderPhotos(data, startIdx, endIdx) {
       grid.className = 'photo-grid';
       grid.setAttribute('data-grid', date);
       section.appendChild(grid);
-      // Insert before load-more button if exists
       const loadMoreEl = document.getElementById('loadMoreWrap');
       if (loadMoreEl) container.insertBefore(section, loadMoreEl);
       else container.appendChild(section);
@@ -463,11 +457,20 @@ function renderPhotos(data, startIdx, endIdx) {
         <img src="${driveUrl(p.id)}" alt="${p.caption}" loading="lazy"
              onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=placeholder-icon>⚠️</div><div class=placeholder-text>Foto tidak ditemukan</div></div>'">
         <div class="photo-overlay">
-          <span class="photo-caption">${p.caption}</span>
+          <span class="photo-caption">${escapeHtml(p.caption)}</span>
         </div>`;
       card.onclick = () => openLightbox(p.globalIdx);
       grid.appendChild(card);
     });
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
   });
 }
 
@@ -482,13 +485,12 @@ function buildGallery(data) {
       <div style="text-align:center; padding: 60px; color: var(--muted);">
         <div style="font-size:40px;opacity:0.2;margin-bottom:12px">📷</div>
         <div style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase">
-          ${photos.length === 0 ? 'Belum ada foto — tambahkan di bagian const photos' : 'Tidak ada foto untuk filter ini'}
+          Tidak ada foto untuk filter ini
         </div>
       </div>`;
     return;
   }
 
-  // Tambahkan load-more wrapper dulu
   const loadMoreWrap = document.createElement('div');
   loadMoreWrap.id = 'loadMoreWrap';
   loadMoreWrap.style.cssText = 'padding: 36px 0; text-align: center; display: none;';
@@ -535,15 +537,17 @@ function updateLoadMore() {
 
 function filterGallery(filter) {
   activeFilter = filter;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.filter-btn[data-filter="${filter}"]`);
+  if (activeBtn) activeBtn.classList.add('active');
   const data = filter === 'semua' ? photos : photos.filter(p => p.date === filter);
   buildGallery(data.map((p, i) => ({ ...p, globalIdx: photos.indexOf(p) })));
 }
 
 function openLightbox(idx) {
   currentIndex = idx;
-  const p = photos[idx];
+  const p = photos[currentIndex];
+  if (!p) return;
   document.getElementById('lightboxImg').src = driveUrl(p.id);
   document.getElementById('lightboxCaption').textContent = `${p.date} — ${p.caption}`;
   document.getElementById('lightbox').classList.add('open');
@@ -556,23 +560,41 @@ function closeLightbox() {
 }
 
 function navigatePhoto(dir) {
+  if (photos.length === 0) return;
   currentIndex = (currentIndex + dir + photos.length) % photos.length;
   openLightbox(currentIndex);
 }
 
-document.addEventListener('keydown', e => {
-  if (!document.getElementById('lightbox').classList.contains('open')) return;
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') navigatePhoto(-1);
-  if (e.key === 'ArrowRight') navigatePhoto(1);
-});
+function buildVideos() {
+  const container = document.getElementById('videoContainer');
+  const countEl = document.getElementById('videoCount');
+  if (!container) return;
+  if (videos.length === 0) {
+    if (countEl) countEl.textContent = 'Belum ada video dokumentasi.';
+    container.innerHTML = '';
+    return;
+  }
+  if (countEl) countEl.textContent = `${videos.length} video dokumentasi`;
+  container.innerHTML = '';
+  videos.slice().sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'video-card';
+    card.innerHTML = `
+      <iframe src="https://www.youtube.com/embed/${v.id}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen loading="lazy"></iframe>
+      <div class="video-info">
+        <div class="video-date">${v.date}</div>
+        <div class="video-caption">${escapeHtml(v.caption)}</div>
+      </div>`;
+    container.appendChild(card);
+  });
+}
 
-// Init
 function init() {
-  // Update count & date
+  // Update count & last update
   document.getElementById('photoCount').textContent =
     photos.length > 0 ? `${photos.length} foto` : 'Belum ada foto';
-
   const dates = photos.map(p => p.date);
   if (dates.length > 0) {
     const sorted = [...new Set(dates)].sort((a, b) => new Date(b) - new Date(a));
@@ -587,16 +609,32 @@ function init() {
   uniqueDates.forEach(date => {
     const btn = document.createElement('button');
     btn.className = 'filter-btn';
+    btn.setAttribute('data-filter', date);
     btn.textContent = date;
-    btn.onclick = (e) => filterGallery(date);
+    btn.onclick = () => filterGallery(date);
     filterBar.appendChild(btn);
   });
 
+  // Set default "Semua" active
+  const allBtn = document.querySelector('.filter-btn[data-filter="semua"]');
+  if (allBtn) allBtn.classList.add('active');
+
+  // Build gallery and videos
   buildGallery(photos.map((p, i) => ({ ...p, globalIdx: i })));
   buildVideos();
 }
 
-init();
+// Keyboard navigation untuk lightbox
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navigatePhoto(-1);
+  if (e.key === 'ArrowRight') navigatePhoto(1);
+});
+
+// Jalankan init setelah DOM siap
+document.addEventListener('DOMContentLoaded', init);
 </script>
+
 </body>
 </html>
