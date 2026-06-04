@@ -105,6 +105,24 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .guide-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
 .guide-code { display: inline-block; background: rgba(255,255,255,0.06); border-radius: 3px; padding: 1px 6px; font-family: "Courier New", monospace; font-size: 11px; color: var(--gold); }
 
+/* REFERENSI */
+.ref-section { margin-bottom: 48px; }
+.ref-section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold2); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+.ref-section-title::after { content: ""; flex: 1; height: 0.5px; background: var(--border); }
+.ref-section-date { font-size: 10px; color: var(--muted); margin-left: 8px; font-weight: 400; letter-spacing: 0.08em; text-transform: none; }
+.ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+.ref-card { border-radius: 8px; overflow: hidden; border: 0.5px solid rgba(255,255,255,0.06); background: var(--bg2); transition: border-color 0.2s, transform 0.2s; cursor: pointer; }
+.ref-card:hover { border-color: var(--gold2); transform: translateY(-2px); }
+.ref-card a { text-decoration: none; display: block; }
+.ref-thumb-wrap { position: relative; width: 100%; aspect-ratio: 9/16; overflow: hidden; background: #1a1a1a; }
+.ref-thumb-wrap.landscape { aspect-ratio: 4/3; }
+.ref-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ref-play { position: absolute; bottom: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.ref-no-link { position: absolute; top: 6px; right: 6px; font-size: 9px; background: rgba(0,0,0,0.5); color: var(--muted); padding: 2px 6px; border-radius: 6px; }
+.ref-info { padding: 8px 10px 10px; }
+.ref-label { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.4; }
+.ref-open { font-size: 10px; color: var(--gold); margin-top: 4px; opacity: 0.7; }
+
 @keyframes fadeUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
 .f1{animation:fadeUp .5s .05s both;} .f2{animation:fadeUp .5s .15s both;}
 </style>
@@ -131,6 +149,9 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
       </button>
       <button class="tab-btn" onclick="switchTab('decisions', this)">
         Item Keputusan <span class="tab-badge" id="decisionsBadge">0</span>
+      </button>
+      <button class="tab-btn" onclick="switchTab('referensi', this)">
+        Referensi <span class="tab-badge" id="refBadge">0</span>
       </button>
     </div>
   </div>
@@ -164,6 +185,11 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
       </p>
     </div>
   </div>
+  <!-- TAB: REFERENSI -->
+  <div class="tab-panel f2" id="tab-referensi">
+    <div id="refList"></div>
+  </div>
+
 </div>
 
 <script>
@@ -267,6 +293,233 @@ function buildDecisions() {
     cl.appendChild(item);
   });
 }
+
+
+// ═══════════════════════════════════════════════
+// DATA REFERENSI
+// ═══════════════════════════════════════════════
+const refGroups = [
+  {
+    judul: "Referensi Warna HPL Interior Lemari",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r01_josua_light.png", label: "Josua Light — lampu dinding kayu", link: "https://www.instagram.com/reel/DMKaTqIPorh/" }
+    ]
+  },
+  {
+    judul: "Pilih Warna Veneer atau HPL",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r02_veneer_hpl.png", label: "Pilih warna veneer atau HPL", link: "https://www.instagram.com/reel/DXq1V_WSrAo/" }
+    ]
+  },
+  {
+    judul: "Apa yang Perlu Diperhatikan?",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r03_diperhatikan.png", label: "Detail lemari + niche display", link: "https://www.instagram.com/p/DUnEWpVk7fE/" }
+    ]
+  },
+  {
+    judul: "Referensi 3 Juni 2026",
+    tanggal: "3 Jun 2026",
+    landscape: true,
+    items: [
+      { thumb: "imgs/ref_juni_01.png", label: "Meja rias Informa Colton + cermin kayu" },
+      { thumb: "imgs/ref_juni_02.png", label: "Kipas plafon kayu putih + AC" },
+      { thumb: "imgs/ref_juni_03.png", label: "Meja rias natural oak + kursi bulat" },
+      { thumb: "imgs/ref_juni_04.png", label: "Lemari putih krem + rak niche kayu" },
+      { thumb: "imgs/ref_juni_05.png", label: "Body air — alat kesehatan" },
+      { thumb: "imgs/ref_juni_06.png", label: "Kipas hitam + plafon drop ceiling line" },
+      { thumb: "imgs/ref_juni_07.png", label: "Bathtub freestanding INAX" },
+      { thumb: "imgs/ref_juni_08.png", label: "Kompor induksi Fotile" },
+      { thumb: "imgs/ref_juni_09.png", label: "Sink granit hitam MODENA" },
+      { thumb: "imgs/ref_juni_10.png", label: "Kabinet dapur upper sliding 2 tingkat" },
+      { thumb: "imgs/ref_juni_11.png", label: "Kompor + cooker hood Fotile + island" },
+      { thumb: "imgs/ref_juni_12.png", label: "Kitchen set full view — krem + walnut" },
+      { thumb: "imgs/ref_juni_13.png", label: "Lemari pintu krem linen tekstur" },
+      { thumb: "imgs/ref_juni_14.png", label: "Lemari pantry krem + rak kaca" },
+      { thumb: "imgs/ref_juni_15.png", label: "Kitchen island + kabinet penuh" },
+      { thumb: "imgs/ref_juni_16.png", label: "Smart lock BARDI di pintu kayu" },
+      { thumb: "imgs/ref_juni_17.png", label: "View lapangan basket dalam rumah" },
+      { thumb: "imgs/ref_juni_18.png", label: "Teras + dinding ekspos + pohon natal" }
+    ]
+  },
+  {
+    judul: "Dinding Dapur Pakai Besi untuk Tempel Magnet",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r05_dapur_besi.png", label: "Dinding dapur pakai besi untuk tempel magnet", link: "https://www.instagram.com/reel/DXqAjIAgNQM/" }
+    ]
+  },
+  {
+    judul: "Wall Gym Pull Up — Ruang Tengah",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r06_wall_gym.png", label: "Wall gym pull up untuk ruang tengah", link: "https://www.instagram.com/reel/DYRA50-uBRH/" }
+    ]
+  },
+  {
+    judul: "Edge WC — Menghindari Air Menumpuk",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r07_edge_wc.png", label: "Edge WC menghindari air menumpuk" }
+    ]
+  },
+  {
+    judul: "Model Kamar Mandi Anak",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r08_kmd_anak.png", label: "Kamar mandi anak — keran orange, keramik kuning tile", link: "https://www.instagram.com/p/DQEYL0_CTlH/" }
+    ]
+  },
+  {
+    judul: "Pintu Lis 9mm Tanpa Kusen",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r09_pintu_lis.png", label: "Pintu lis 9mm tanpa kusen — clean polos", link: "https://www.instagram.com/reel/C-VLPkGywX2/" }
+    ]
+  },
+  {
+    judul: "Kamar Mandi Utama Mr. Choi",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r10_kmd_utama.png", label: "KMD utama — kaca besar, full travertine 240, undersink lampu", link: "https://www.instagram.com/p/DQ2yjlxkm5-/" }
+    ]
+  },
+  {
+    judul: "Laundry Room",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r11_laundry.png", label: "Mesin cuci tinggi, bawahnya laci untuk keranjang", link: "https://www.instagram.com/reel/C5MebX2B_HA/" }
+    ]
+  },
+  {
+    judul: "Sink Modern Besar",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r12_sink.png", label: "Sink modern besar dengan berbagai fungsi — lega", link: "https://www.instagram.com/p/DU-i3YEk9Mc/" }
+    ]
+  },
+  {
+    judul: "Tempat Penyimpanan Bawah Vouyer",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r13_vouyer.png", label: "Tempat penyimpanan bawah tempat duduk vouyer untuk sepatu", link: "https://www.instagram.com/reel/DStpPDlk8B-/" }
+    ]
+  },
+  {
+    judul: "Mode Ambience Light di Belakang Ranjang",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r14_ambience.png", label: "Mode ambience light dibelakang ranjang", link: "https://www.instagram.com/reel/DRC8Gf8AtcX/" }
+    ]
+  },
+  {
+    judul: "Ranjang Kamar Mrs. Jieun",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r15_ranjang_jieun.png", label: "Ranjang kamar Mrs. Jieun dan kamar mandi detail", link: "https://www.instagram.com/reel/DMcvDCWTloX/" }
+    ]
+  },
+  {
+    judul: "Detail Kompartemen Service Lemari",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r16_service_lemari.png", label: "Detail kompartemen service lemari", link: "https://www.instagram.com/reel/DRMh653ks-n/" }
+    ]
+  },
+  {
+    judul: "Detail Penyimpanan dan Colokan",
+    tanggal: "3 Jun 2026",
+    catatan: "Laci dengan colokan di dalam. Tempat hair dryer & straightener pakai stainless bucket. Penyimpanan model laci.",
+    items: [
+      { thumb: "imgs/penyimpanan_01.png", label: "Laci sliding penyimpanan samping" },
+      { thumb: "imgs/penyimpanan_02.png", label: "Colokan 2 lubang di dalam laci" },
+      { thumb: "imgs/penyimpanan_03.png", label: "Tempat hair dryer & straightener" },
+      { thumb: "imgs/penyimpanan_04.png", label: "Mesin cuci + keranjang laci bawah" }
+    ],
+    link: "https://www.instagram.com/reel/DSZy9fFD5b6/"
+  },
+  {
+    judul: "Detail 1 Bagian di Kitchen",
+    tanggal: "3 Jun 2026",
+    items: [
+      { thumb: "imgs/r18_kitchen_detail.png", label: "Detail 1 bagian di kitchen — pull out appliance shelf", link: "https://www.instagram.com/reel/DTA5O_3jcFl/" }
+    ]
+  },
+  {
+    judul: "Referensi Dapur + First Sketch",
+    tanggal: "3 Jun 2026",
+    landscape: true,
+    items: [
+      { thumb: "imgs/dapur_sketch_01.png", label: "Sketch layout no.3 — freezer & mesin cuci" },
+      { thumb: "imgs/dapur_sketch_02.png", label: "Kitchen layout — island panjang (X mark)" },
+      { thumb: "imgs/dapur_sketch_03.png", label: "Island marble putih (referensi)" },
+      { thumb: "imgs/dapur_sketch_04.png", label: "Warna HPL — Cashmere Grey + Rustic Oak" },
+      { thumb: "imgs/dapur_sketch_05.png", label: "Sketch detail kitchen — sliding door, pantry, laci" },
+      { thumb: "imgs/dapur_sketch_06.png", label: "Kitchen kabinet oak + rak kaca sliding" },
+      { thumb: "imgs/dapur_sketch_07.png", label: "Kitchen island view penuh — natural wood" }
+    ]
+  }
+];
+
+function buildReferensi() {
+  const container = document.getElementById("refList");
+  let total = 0;
+  refGroups.forEach(g => total += g.items.length);
+  document.getElementById("refBadge").textContent = total;
+
+  refGroups.forEach(g => {
+    const sec = document.createElement("div");
+    sec.className = "ref-section";
+
+    const titleEl = document.createElement("div");
+    titleEl.className = "ref-section-title";
+    titleEl.innerHTML = g.judul + (g.tanggal ? `<span class="ref-section-date">${g.tanggal}</span>` : "");
+    sec.appendChild(titleEl);
+
+    if (g.catatan) {
+      const note = document.createElement("div");
+      note.style.cssText = "font-size:12px;color:rgba(210,175,100,0.6);font-style:italic;margin-bottom:12px;line-height:1.6;";
+      note.textContent = g.catatan;
+      sec.appendChild(note);
+    }
+
+    const grid = document.createElement("div");
+    grid.className = "ref-grid";
+
+    g.items.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "ref-card";
+
+      const linkUrl = item.link || g.link || null;
+      const inner = linkUrl
+        ? `<a href="${linkUrl}" target="_blank" rel="noopener">`
+        : `<div>`;
+      const innerClose = linkUrl ? `</a>` : `</div>`;
+
+      const isLandscape = g.landscape || false;
+      card.innerHTML = `
+        ${inner}
+          <div class="ref-thumb-wrap${isLandscape ? " landscape" : ""}">
+            <img class="ref-thumb" src="${item.thumb}" alt="${item.label}" loading="lazy">
+            ${linkUrl ? '<div class="ref-play">▶</div>' : '<div class="ref-no-link">foto</div>'}
+          </div>
+          <div class="ref-info">
+            <div class="ref-label">${item.label}</div>
+            ${linkUrl ? '<div class="ref-open">Buka Instagram →</div>' : ''}
+          </div>
+        ${innerClose}`;
+      grid.appendChild(card);
+    });
+
+    sec.appendChild(grid);
+    container.appendChild(sec);
+  });
+}
+
+buildReferensi();
 
 buildTopicFilters();
 buildNotes(notes);
